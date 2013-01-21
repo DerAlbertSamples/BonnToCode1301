@@ -1,0 +1,68 @@
+﻿@{
+    ViewBag.Title = "ToDo - Angular Breeze";
+}
+
+@section head
+{
+    @Styles.Render("~/css/todo")
+}
+<div data-ng-app="TodoMain">
+    
+    <div id="applicationHost" data-ng-controller="TodoCtrl" class="ng-cloak">
+        <header>
+            <h1>Breeze ToDos</h1>
+            <h2>with AngularJs</h2>
+            <form data-ng-submit="addItem()">
+                <input type="text" data-ng-model="newTodo" placeholder="What needs to be done?" />
+            </form>
+        </header>
+
+        <section>
+            <div class="mark-all">
+                <span data-ng-show="items.length">
+                    <input id="markAll" type="checkbox" data-ng-model="allCompleted" data-ng-click="toggleCompleted()" />
+                    <label for="markAll">Mark all as complete </label>
+                </span>
+
+                <input id="includeArchived" type="checkbox" data-ng-model="includeArchived" data-ng-click="getAllTodos()" />
+                <label for="includeArchived" class="archived">Show archived</label>
+            </div>
+
+            <ul>
+                <li data-ng-repeat="item in items">
+                    <div data-ng-show="!(item.isEditing)">
+                         <!--data-ng-class on the check box in the next line is a fix for a subtle IE9 repaint bug-->
+                        <input type="checkbox" data-ng-model="item.IsDone" data-ng-class="{done: item.IsDone}" />
+                        <label data-ng-click="edit(item)" data-ng-class="{done: item.IsDone, archived: item.IsArchived}" >{{item.Description}}</label>
+                        <a href="#" data-ng-click="removeItem(item)">X</a>
+                    </div>
+                    <div data-ng-show="item.isEditing">
+                        <form data-ng-submit="completeEdit(item)">
+                            <input type="text" data-ng-model="item.Description" data-on-blur="completeEdit(item)" data-focus-when="item.isEditing" />
+                        </form>
+                    </div>
+                </li>
+
+            </ul>
+
+            <div class="controlLinks">
+                <a href="#" data-ng-click="purge()">Purge</a>&nbsp;&nbsp;
+                <a href="#" data-ng-click="reset()">Reset</a>
+            </div>
+        </section>
+
+        <footer>
+            <div data-ng-show="itemsLeftMessage()">{{itemsLeftMessage()}}</div>
+            <a href="#" data-ng-show="archiveCompletedMessage()" data-ng-click="archiveCompletedItems()">{{archiveCompletedMessage()}}</a>
+        </footer>
+
+    </div>
+</div>
+
+@section scripts
+{
+    @Scripts.Render("~/resources/breeze")
+    @Scripts.Render("~/resources/angular")
+    <script>app = {};</script>
+    @Scripts.Render("~/resources/todo")
+}
