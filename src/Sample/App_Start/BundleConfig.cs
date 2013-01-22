@@ -27,7 +27,7 @@ namespace Sample.App_Start
             var jQuery = new ScriptBundle("~/resources/jquery")
                 .Include(
                     "~/Scripts/jQuery-{version}.js"
-                    );
+                );
             bundles.Add(jQuery);
             var breeze = new ScriptBundle("~/resources/breeze")
                 .Include(
@@ -49,7 +49,13 @@ namespace Sample.App_Start
                     "~/Scripts/knockout.debug.js",
                     "~/Scripts/knockout.mapping-latest.debug.js"
                 );
+
             bundles.Add(knockout);
+            var signalr = new ScriptBundle("~/resources/signalr")
+                .Include(
+                    "~/Scripts/jquery.signalr*"
+                );
+            bundles.Add(signalr);
             var toDo = new ScriptBundle("~/resources/todo")
                 .Include(
                     "~/js/todo/logger.js",

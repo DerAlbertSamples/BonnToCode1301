@@ -2,7 +2,10 @@ using System;
 using System.Linq;
 using System.Web.Http;
 using Breeze.WebApi;
+using Microsoft.AspNet.SignalR;
+using Microsoft.AspNet.SignalR.Infrastructure;
 using Newtonsoft.Json.Linq;
+using Sample.Hubs;
 using Sample.Models;
 
 namespace Sample.Controllers
@@ -26,6 +29,7 @@ namespace Sample.Controllers
         // ~/api/todos/Metadata 
         [HttpGet]
         public string Metadata() {
+            SendMessage("metadaten abgefragt");
             return _contextProvider.Metadata();
         }
 
@@ -33,13 +37,19 @@ namespace Sample.Controllers
         // ~/api/todos/Todos?$filter=IsArchived eq false&$orderby=CreatedAt 
         [HttpGet]
         public IQueryable<TodoItem> Todos() {
+            SendMessage("todos abgefragt");
             return _contextProvider.Context.Todos;
         }
 
         // ~/api/todos/SaveChanges
         [HttpPost]
         public SaveResult SaveChanges(JObject saveBundle) {
-            return _contextProvider.SaveChanges(saveBundle);
+            var saveChanges = _contextProvider.SaveChanges(saveBundle);
+            foreach (TodoItem item in saveChanges.Entities)
+            {
+                SendMessage(string.Format("{0} {1} {2}", item.Description, item.IsArchived?"archived":"", item.IsDone?"done":""));
+            }
+            return saveChanges;
         }
 
         // ~/api/todos/purge
@@ -47,6 +57,7 @@ namespace Sample.Controllers
         public string Purge()
         {
             ToDoDatabaseInitializer.PurgeDatabase(_contextProvider.Context);
+            SendMessage("database purged");
             return "purged";
         }
 
@@ -56,6 +67,7 @@ namespace Sample.Controllers
         {
             Purge();
             ToDoDatabaseInitializer.SeedDatabase(_contextProvider.Context);
+            SendMessage("reset database");
             return "reset";
         }
 
@@ -75,6 +87,12 @@ namespace Sample.Controllers
                     Reset();
                 }
             }
+        }
+
+        public void SendMessage(string message)
+        {
+            var context = GlobalHost.ConnectionManager.GetHubContext<LogHub>();
+            context.Clients.All.AddMessage(message);
         }
     }
 }

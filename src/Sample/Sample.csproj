@@ -51,6 +51,9 @@
     <Reference Include="Irony">
       <HintPath>..\packages\Breeze.WebApi.0.85.2\lib\Irony.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Client">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Client.1.0.0-rc2\lib\net45\Microsoft.AspNet.SignalR.Client.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Core">
       <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.1.0.0-rc2\lib\net40\Microsoft.AspNet.SignalR.Core.dll</HintPath>
     </Reference>
@@ -164,11 +167,13 @@
     <Compile Include="App_Start\BreezeWebApiConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LogController.cs" />
     <Compile Include="Controllers\ToDoController.cs" />
     <Compile Include="Controllers\TodosController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Hubs\LogHub.cs" />
     <Compile Include="Models\TodoDatabaseInitializer.cs" />
     <Compile Include="Models\TodoItem.cs" />
     <Compile Include="Models\TodosContext.cs" />
@@ -389,6 +394,7 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\ToDo\Index.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Log\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
